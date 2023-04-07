@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>login UI</title>
+    <link rel="stylesheet" href="../static/show.css">
+
+</head>
+<body>
+    <div class="box">
+            <h2>合成大西瓜深度学习网页</h2>
+  <form action="http://127.0.0.1:5000/train" method="GET">
+    <div class="inputBox">
+      <input type="text" name="learn_factor" value="5" required="required" style="font-size: 20px">
+      <label>训练频率</label>
+    </div>
+    <div class="inputBox">
+		<input type="text" name="memory_warmup_size"  value="20" required="required" style="font-size: 20px">
+		<label>预存经验数据量</label>
+    </div>
+      <div class="inputBox">
+      <input type="text" name="batch_size" value="8" required="required" style="font-size: 20px">
+      <label>从经验池取样数量</label>
+    </div>
+      <div class="inputBox">
+      <input type="text" name="learning_rate" value="0.001" required="required" style="font-size: 20px">
+      <label>学习率</label>
+    </div>
+      <div class="inputBox">
+      <input type="text" name="gamma" value="0.99" required="required" style="font-size: 20px">
+      <label>衰减因子</label>
+
+    </div>
+      <div class="inputBox">
+      <input type="text" name="hid1_size" value="256" required="required" style="font-size: 20px">
+      <label>第一层的输出维数</label>
+
+    </div>
+      <div class="inputBox">
+      <input type="text" name="hid2_size" value="256" required="required" style="font-size: 20px">
+      <label>第二层的输出维数</label>
+    </div>
+      <label style="color: deepskyblue">激活函数</label> &nbsp; &nbsp; &nbsp; &nbsp;
+       &nbsp; &nbsp; &nbsp;<label style="color: deepskyblue">加载已保存的模型</label>
+
+      <div class="inputBox">
+
+      <select name="functions" required="required" style="font-size: 20px" >
+        <option value="sigmoid" >sigmoid</option>
+        <option value="relu">relu</option>
+        <option value="elu">elu</option>
+        <option value="hard_shrink">hard_shrink</option>
+        <option value="exp">exp</option>
+
+    </select>
+
+      <select name="load_name" required="required" style="font-size: 20px" >
+      <option value="0">无</option>
+          {% for mode_file in model_files %}
+            <option value="{{mode_file.name}}">{{mode_file.name}}</option>
+          {% endfor %}
+      </select>
+    <div class="inputBox">
+      <input type="text" name="save_name" value="" required="required" style="font-size: 20px">
+      <label>保持模型名称</label>
+
+    </div>
+    <div class="inputBox" hidden="hidden">
+      <input type="text" name="username" value="{{username}}" required="required" style="font-size: 20px"
+             >
+      <label>用户名</label>
+    </div>
+    </div>
+      <div align="center">
+          <br>
+    <input   type="submit" name="" value="开始深度学习" >
+
+    </div>
+	  </form>
+	</div>
+    </body>
+</html>

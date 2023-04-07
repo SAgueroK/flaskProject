@@ -1,0 +1,83 @@
+body{
+    background-image: url('../imgs/bg.jpg');/*背景图的引入语法*/
+    background-repeat: no-repeat;/*背景图的重复平铺-no-repeat表示不重复*/
+    background-size: cover;/*背景图尺寸-cover全屏显示*/
+    background-attachment: fixed;/*背景图粘贴固定-不随鼠标滚动进行移动*/
+}
+.login-box{
+    width: 600px;/*宽度*/
+    height: auto;/*高度-auto表示自动,由内容撑开*/
+    border: 1px solid #fff;/*边框:粗细 形状 颜色*/
+    margin: 200px auto;/*外边距-上下200,左右居中--块级元素水平居中*/
+}
+/* 后代选择器 语法:父元素 子元素 */
+.login-box h1{
+    color: #fff;
+    font-size: 30px;/*字体尺寸*/
+    margin: 30px 0;/*上下边距30,左右为0*/
+    text-align: center;/*字体水平居中--left、right、center、justfy两端对齐*/
+}
+form{
+    width: 80%;
+    margin: auto;
+}
+.user-pwd,
+.user-name{
+    height: 60px;
+    border: 1px solid #fff;
+    border-radius: 26px;/*边框圆角*/
+    margin-bottom: 25px;/*下边距--垂直方向距离下一个元素的距离*/
+    display: flex;/*弹性盒模型*/
+}
+.user-pwd label,
+.user-name label{
+    width: 60px;
+    height: 60px;
+    display: block;/*label标签默认为行级元素,无法直接设置宽高,因此display转为block块级元素*/
+    line-height: 60px;/*行高--垂直方向居中-单元素设置*/
+    text-align: center;/**/
+    color: #fff;
+    font-size: 30px;
+}
+.user-pwd input,
+.user-name input{
+    flex: 1;/*表示占据剩余空间,避免了手动计算*/
+    background-color: transparent;/*背景色透明*/
+    /*
+        去除边框
+            border: none;
+            border-width: 0px;
+            border-style: none;
+    */
+    border-width: 0px;
+    outline: none;/*外侧轮廓线*/
+    color: #fff;
+}
+/*设置提示文本颜色*/
+.user-pwd input::-webkit-input-placeholder,
+.user-name input::-webkit-input-placeholder{
+    color: #fff;
+}
+/*登录按钮样式*/
+.submit-btn{
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    border: none;
+    cursor: pointer;/*鼠标悬停变手*/
+    border-radius: 26px;
+    margin-bottom: 23px;
+    columns: #555555;
+    outline: none;/*去除轮廓线*/
+}
+.other-box{
+    height: 60px;
+    margin-bottom: 10px;
+}
+.other-box a{
+    color: #555555;
+}
+/* 伪元素选择器last-child,表示选中最后一个a */
+.other-box a:last-child{
+    float: right;
+}
