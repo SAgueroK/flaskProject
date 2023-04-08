@@ -17,6 +17,8 @@ import cv2
 import pygame
 import datetime
 
+from mul_envs import reward_list, action_list
+
 # paddle.enable_static()
 
 LEARN_FREQ = 1  # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
@@ -254,12 +256,12 @@ def run(functions):
         agent.restore(LOAD_PATH)
 
     # 先往经验池里存一些数据，避免最开始训练的时候样本丰富度不够
-    print('-[INFO] Warm up.')
-    while len(rpm) < MEMORY_WARMUP_SIZE:
-        run_episode(envs, agent, rpm, episode=-1)
-        print("wam up", len(rpm), MEMORY_WARMUP_SIZE)
+    # print('-[INFO] Warm up.')
+    # while len(rpm) < MEMORY_WARMUP_SIZE:
+    #     run_episode(envs, agent, rpm, episode=-1)
+    #     print("wam up", len(rpm), MEMORY_WARMUP_SIZE)
 
-    max_episode = 2
+    max_episode = 1
 
     # 开始训练
     print('-[INFO] Start training.')

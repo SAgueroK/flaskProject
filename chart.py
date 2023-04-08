@@ -12,10 +12,9 @@ if __name__ == '__main__':
     c = (
         Line()
         .add_xaxis(list)
-        .add_yaxis("商家1", list)
         .add_yaxis("商家2", list)
         .set_global_opts(title_opts=opts.TitleOpts(title="折线图-基本示例"))
-        .render("line_test.html")
+        .render("./templates/line_test.html")
     )
 
 

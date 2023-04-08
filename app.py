@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, Column, Integer, String, text
 from xpinyin import Pinyin
-
+from pyecharts.charts import Bar, Line
+from pyecharts import options as opts
 import train_mul
 from concurrent.futures import ThreadPoolExecutor
 import datetime
+
+from mul_envs import action_list, reward_list
 
 executor = ThreadPoolExecutor()
 app = Flask(__name__)
@@ -71,20 +71,20 @@ def train():  # put application's code here
     model_file = Model_file(user_name=username, name=save_name, path=save_path)
     insert_model_file(model_file)
     executor.submit(run(
-                    learn_factor=int(request.args.get("learn_factor")),
-                    memory_warmup_size=int(request.args.get("memory_warmup_size")),
-                    batch_size=int(request.args.get("batch_size")),
-                    learning_rate=float(request.args.get("learning_rate")),
-                    gamma=float(request.args.get("gamma")),
-                    functions=str(request.args.get("functions")),
-                    hid1_size=int(request.args.get("hid1_size")),
-                    hid2_size=int(request.args.get("hid2_size")),
-                    load_name=str(request.args.get("load_name")),
-                    save_name=str(request.args.get("save_name")),
-                    username=str(request.args.get("username"))
-                    ))
+        learn_factor=int(request.args.get("learn_factor")),
+        memory_warmup_size=int(request.args.get("memory_warmup_size")),
+        batch_size=int(request.args.get("batch_size")),
+        learning_rate=float(request.args.get("learning_rate")),
+        gamma=float(request.args.get("gamma")),
+        functions=str(request.args.get("functions")),
+        hid1_size=int(request.args.get("hid1_size")),
+        hid2_size=int(request.args.get("hid2_size")),
+        load_name=str(request.args.get("load_name")),
+        save_name=str(request.args.get("save_name")),
+        username=str(request.args.get("username"))
+    ))
 
-    return render_template('./login.html')
+    return render_template('./chart.html')
 
 
 @app.route('/register')
@@ -101,6 +101,11 @@ def try_register():  # put application's code here
     db.session.add(us1)
     db.session.commit()
     return render_template('./login.html')
+
+
+@app.route('/chart_reward')
+def chart_reward():
+    return render_template('./register.html')
 
 
 @app.route('/demo')
@@ -124,7 +129,6 @@ def run(learn_factor, memory_warmup_size, batch_size, learning_rate, gamma, func
     train_mul_instance.set_factor(learn_factor, memory_warmup_size, batch_size, learning_rate, gamma,
                                   hid1_size, hid2_size, load_path, save_path)
     train_mul_instance.run(functions)
-
 
 class User(db.Model):
     # 创建表结构操作
@@ -158,6 +162,8 @@ def insert_model_file(model_file):
 def delete_model_file(model_file):
     db.session.delete(model_file)
     db.session.commit()
+
+
 
 
 with app.app_context():
