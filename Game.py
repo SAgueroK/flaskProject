@@ -4,6 +4,9 @@ import pygame
 import pygame as pg
 import pymunk.pygame_util
 from Fruit import create_fruit
+from pyecharts.charts import Bar, Line, EffectScatter
+from pyecharts import options as opts
+score_list = []
 
 
 class GameBoard(object):
@@ -101,6 +104,7 @@ class GameBoard(object):
         ball_shape.friction = 0.6
         ball_shape.collision_type = i
         space.add(ball_body, ball_shape)
+        score_list.append(self.score)
         return ball_shape
 
     def create_segment(self, from_, to_, thickness, space, color):
@@ -140,5 +144,15 @@ class GameBoard(object):
         pass
 
     def self_quit(self):
+        step_list = []
+        for step in range(0, len(score_list)):
+            step_list.append(step)
+        c = (
+            Line()
+            .add_xaxis(step_list)
+            .add_yaxis("分数", score_list)
+            .set_global_opts(title_opts=opts.TitleOpts(title="折线图-分数"))
+            .render("./templates/line_score.html")
+        )
         pygame.quit()
         sys.exit()
