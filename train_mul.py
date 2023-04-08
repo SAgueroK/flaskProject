@@ -16,6 +16,7 @@ from parl.algorithms import DQN  # 也可以直接从parl库中导入DQN算法
 import cv2
 import pygame
 import datetime
+
 # paddle.enable_static()
 
 LEARN_FREQ = 1  # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
@@ -28,6 +29,8 @@ HID1_SIZE = 256
 HID2_SIZE = 256
 SAVE_PATH = "default"
 LOAD_PATH = "NONE"
+
+
 class Model(parl.Model):
 
     def network(self, functions, act_dim):
@@ -218,6 +221,7 @@ def set_factor(learn_factor, memory_warmup_size, batch_size, learning_rate, gamm
     SAVE_PATH = save_path
     print("train_set is running")
 
+
 def run(functions):
     from mul_envs import MulEnvs
 
@@ -253,7 +257,7 @@ def run(functions):
     print('-[INFO] Warm up.')
     while len(rpm) < MEMORY_WARMUP_SIZE:
         run_episode(envs, agent, rpm, episode=-1)
-        print("wam up",len(rpm),MEMORY_WARMUP_SIZE)
+        print("wam up", len(rpm), MEMORY_WARMUP_SIZE)
 
     max_episode = 2
 
