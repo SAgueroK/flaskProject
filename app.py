@@ -58,6 +58,26 @@ def login():  # put application's code here
     return render_template('./login.html')
 
 
+@app.route('/line_reward')
+def line_reward():  # put application's code here
+    return render_template('./line_reward.html')
+
+
+@app.route('/line_score')
+def line_score():  # put application's code here
+    return render_template('./line_score.html')
+
+
+@app.route('/bar_action_count')
+def bar_action_count():  # put application's code here
+    return render_template('./bar_action_count.html')
+
+
+@app.route('/position_action_time')
+def position_action_time():  # put application's code here
+    return render_template('./position_action_time.html')
+
+
 @app.route('/train', methods=["GET"])
 def train():  # put application's code here
     p = Pinyin()
@@ -130,6 +150,7 @@ def run(learn_factor, memory_warmup_size, batch_size, learning_rate, gamma, func
                                   hid1_size, hid2_size, load_path, save_path)
     train_mul_instance.run(functions)
 
+
 class User(db.Model):
     # 创建表结构操作
     # 表名
@@ -162,8 +183,6 @@ def insert_model_file(model_file):
 def delete_model_file(model_file):
     db.session.delete(model_file)
     db.session.commit()
-
-
 
 
 with app.app_context():
