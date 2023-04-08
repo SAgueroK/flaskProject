@@ -7,11 +7,11 @@
 
 </head>
 <body >
-    <div id="05c29307263e40c783c85ecf48e40ce0" class="chart-container" style="width:900px; height:500px; "></div>
+    <div id="2aacee8b24c14cfa91a0ba6be7943901" class="chart-container" style="width:900px; height:500px; "></div>
     <script>
-        var chart_05c29307263e40c783c85ecf48e40ce0 = echarts.init(
-            document.getElementById('05c29307263e40c783c85ecf48e40ce0'), 'white', {renderer: 'canvas'});
-        var option_05c29307263e40c783c85ecf48e40ce0 = {
+        var chart_2aacee8b24c14cfa91a0ba6be7943901 = echarts.init(
+            document.getElementById('2aacee8b24c14cfa91a0ba6be7943901'), 'white', {renderer: 'canvas'});
+        var option_2aacee8b24c14cfa91a0ba6be7943901 = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -36,132 +36,119 @@
     ],
     "series": [
         {
-            "type": "line",
-            "name": "\u5956\u52b1\u503c",
-            "connectNulls": false,
-            "xAxisIndex": 0,
-            "symbolSize": 4,
-            "showSymbol": true,
-            "smooth": false,
-            "clip": true,
-            "step": false,
+            "type": "effectScatter",
+            "name": "actions",
+            "showEffectOn": "render",
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            },
+            "symbolSize": 10,
             "data": [
                 [
                     0,
-                    -2
+                    8
                 ],
                 [
                     1,
-                    -4
+                    8
                 ],
                 [
                     2,
-                    -2
+                    6
                 ],
                 [
                     3,
-                    -1
+                    6
                 ],
                 [
                     4,
-                    -1
+                    11
                 ],
                 [
                     5,
-                    -1
-                ],
-                [
-                    6,
-                    -3
-                ],
-                [
-                    7,
-                    -4
-                ],
-                [
-                    8,
                     3
                 ],
                 [
+                    6,
+                    6
+                ],
+                [
+                    7,
+                    6
+                ],
+                [
+                    8,
+                    6
+                ],
+                [
                     9,
-                    4
+                    6
                 ],
                 [
                     10,
-                    5
+                    11
                 ],
                 [
                     11,
-                    -1
+                    8
                 ],
                 [
                     12,
-                    -4
+                    6
                 ],
                 [
                     13,
-                    -3
+                    6
                 ],
                 [
                     14,
-                    -1
+                    6
                 ],
                 [
                     15,
-                    7
+                    6
                 ],
                 [
                     16,
-                    2
+                    6
                 ],
                 [
                     17,
-                    5
+                    6
                 ],
                 [
                     18,
-                    -3
+                    6
                 ],
                 [
                     19,
-                    -1
+                    6
                 ],
                 [
                     20,
-                    -4
+                    6
                 ],
                 [
                     21,
-                    28
+                    6
                 ]
             ],
-            "hoverAnimation": true,
             "label": {
                 "show": true,
                 "margin": 8
-            },
-            "logBase": 10,
-            "lineStyle": {
-                "show": true,
-                "width": 1,
-                "opacity": 1,
-                "curveness": 0,
-                "type": "solid"
-            },
-            "areaStyle": {
-                "opacity": 0
-            },
-            "zlevel": 0,
-            "z": 0
+            }
         }
     ],
     "legend": [
         {
             "data": [
-                "\u5956\u52b1\u503c"
+                "actions"
             ],
             "selected": {
-                "\u5956\u52b1\u503c": true
+                "actions": true
             },
             "show": true,
             "padding": 5,
@@ -280,7 +267,7 @@
     "title": [
         {
             "show": true,
-            "text": "\u6298\u7ebf\u56fe-\u5956\u52b1\u503c",
+            "text": "\u70b9\u72b6\u56fe-actions",
             "target": "blank",
             "subtarget": "blank",
             "padding": 5,
@@ -291,7 +278,7 @@
         }
     ]
 };
-        chart_05c29307263e40c783c85ecf48e40ce0.setOption(option_05c29307263e40c783c85ecf48e40ce0);
+        chart_2aacee8b24c14cfa91a0ba6be7943901.setOption(option_2aacee8b24c14cfa91a0ba6be7943901);
     </script>
 </body>
 </html>

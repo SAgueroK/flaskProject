@@ -1,7 +1,8 @@
 from multiprocessing import Pipe, Pool
 from State2NN import AI_Board
-from pyecharts.charts import Bar, Line
+from pyecharts.charts import Bar, Line, EffectScatter
 from pyecharts import options as opts
+
 reward_list = []
 action_list = []
 
@@ -15,7 +16,7 @@ def run_game(child_conn):
             print('-[INFO] get action:{} from queue'.format(action))
             image, reward, isdone = game.next(action)
             reward_list.append(reward)
-            action_list.append(action)
+            action_list.append(int(action))
             if isdone:
                 game.reset()
             child_conn.send([image, reward, isdone])
@@ -31,9 +32,30 @@ def run_game(child_conn):
                 .set_global_opts(title_opts=opts.TitleOpts(title="折线图-奖励值"))
                 .render("./templates/line_reward.html")
             )
+            for action in action_list:
+                print(action)
+            c = (
+                EffectScatter()
+                .add_xaxis(step_list)
+                .add_yaxis("actions", action_list)
+                .set_global_opts(title_opts=opts.TitleOpts(title="点状图-actions"))
+                .render("./templates/position_action_time.html")
+            )
+            action_range = []
+            action_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            for step in range(1, 17):
+                action_range.append(step)
+            for action in action_list:
+                action_count[action] += 1
+            c = (
+                Bar()
+                .add_xaxis(action_range)
+                .add_yaxis("actions", action_count)
+                .set_global_opts(title_opts=opts.TitleOpts(title="柱状图-actions"))
+                .render("./templates/bar_action_count.html")
+            )
             game.self_quit()
             break
-
 
 
 class MulEnvs(object):
