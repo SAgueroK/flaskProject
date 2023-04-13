@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from xpinyin import Pinyin
 from pyecharts.charts import Bar, Line
@@ -6,7 +7,7 @@ from pyecharts import options as opts
 import train_mul
 from concurrent.futures import ThreadPoolExecutor
 import datetime
-
+import json
 from mul_envs import action_list, reward_list
 
 executor = ThreadPoolExecutor()
@@ -32,6 +33,8 @@ app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}" \
                                         f"?charset=utf8"
 db = SQLAlchemy(app)
+
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/')
@@ -88,20 +91,33 @@ def train():  # put application's code here
     model_file = db.session.query(Model_file).filter_by(name=save_name).first()
     if model_file is not None:
         delete_model_file(model_file)
-    model_file = Model_file(user_name=username, name=save_name, path=save_path)
+    learn_factor = int(request.args.get("learn_factor"))
+    memory_warmup_size = int(request.args.get("memory_warmup_size"))
+    batch_size = int(request.args.get("batch_size"))
+    learning_rate = float(request.args.get("learning_rate"))
+    gamma = float(request.args.get("gamma"))
+    functions = str(request.args.get("functions"))
+    hid1_size = int(request.args.get("hid1_size"))
+    hid2_size = int(request.args.get("hid2_size"))
+    observation = float(request.args.get("observation"))
+    model_file = Model_file(user_name=username, name=save_name, path=save_path, learn_factor=learn_factor,
+                            memory_warmup_size=memory_warmup_size, batch_size=batch_size, learning_rate=learning_rate,
+                            gamma=gamma, functions=functions, hid1_size=hid1_size, hid2_size=hid2_size,
+                            observation=observation)
     insert_model_file(model_file)
     executor.submit(run(
-        learn_factor=int(request.args.get("learn_factor")),
-        memory_warmup_size=int(request.args.get("memory_warmup_size")),
-        batch_size=int(request.args.get("batch_size")),
-        learning_rate=float(request.args.get("learning_rate")),
-        gamma=float(request.args.get("gamma")),
-        functions=str(request.args.get("functions")),
-        hid1_size=int(request.args.get("hid1_size")),
-        hid2_size=int(request.args.get("hid2_size")),
+        learn_factor=learn_factor,
+        memory_warmup_size=memory_warmup_size,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        gamma=gamma,
+        functions=functions,
+        hid1_size=hid1_size,
+        hid2_size=hid2_size,
         load_name=str(request.args.get("load_name")),
-        save_name=str(request.args.get("save_name")),
-        username=str(request.args.get("username"))
+        save_name=save_name,
+        username=username,
+        observation=observation
     ))
 
     return render_template('./chart.html')
@@ -128,6 +144,16 @@ def chart_reward():
     return render_template('./register.html')
 
 
+@app.route('/get_rewards')
+def get_rewards():  # put application's code here
+    reward_lists = get_rewards_file()
+    data = []
+    for reward in reward_lists:
+        reward.__dict__.pop("_sa_instance_state")
+        data.append(reward.__dict__)
+    return json.dumps(data)
+
+
 @app.route('/demo')
 def demo():  # put application's code here
     run(5, 200, 32, 0.001, 0.99, "sigmoid", 256, 256, "test", "test", "admit")
@@ -135,9 +161,9 @@ def demo():  # put application's code here
 
 
 def run(learn_factor, memory_warmup_size, batch_size, learning_rate, gamma, functions, hid1_size, hid2_size,
-        load_name, save_name, username):
+        load_name, save_name, username, observation):
     print("app:", learn_factor, memory_warmup_size, batch_size, learning_rate, gamma, functions, hid1_size,
-          hid2_size, load_name, save_name, username)
+          hid2_size, load_name, save_name, username, observation)
     p = Pinyin()
     save_path = './final/{}.ckpt'.format(username + p.get_pinyin(save_name))
     if load_name is not "0":
@@ -147,7 +173,7 @@ def run(learn_factor, memory_warmup_size, batch_size, learning_rate, gamma, func
 
     train_mul_instance = train_mul
     train_mul_instance.set_factor(learn_factor, memory_warmup_size, batch_size, learning_rate, gamma,
-                                  hid1_size, hid2_size, load_path, save_path)
+                                  hid1_size, hid2_size, load_path, save_path, observation)
     train_mul_instance.run(functions)
 
 
@@ -168,6 +194,33 @@ class Model_file(db.Model):
     user_name = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255), nullable=False, primary_key=True)
     path = db.Column(db.String(255), nullable=False)
+    learn_factor = db.Column(db.String(255), nullable=False)
+    memory_warmup_size = db.Column(db.String(255), nullable=False)
+    batch_size = db.Column(db.String(255), nullable=False)
+    learning_rate = db.Column(db.String(255), nullable=False)
+    gamma = db.Column(db.String(255), nullable=False)
+    functions = db.Column(db.String(255), nullable=False)
+    hid1_size = db.Column(db.String(255), nullable=False)
+    hid2_size = db.Column(db.String(255), nullable=False)
+    observation = db.Column(db.String(255), nullable=False)
+
+
+class rewards_file(db.Model):
+    # 创建表结构操作
+    # 表名
+    __tablename__ = 'rewards'
+    #  字段
+    time = db.Column(db.String(255), nullable=False, primary_key=True)
+    rewards = db.Column(db.String(255), nullable=False)
+
+    def __init__(self, time, rewards):
+        self.time = time
+        self.rewards = rewards
+
+
+def get_rewards_file():
+    rewards_files = db.session.query(rewards_file).all()
+    return rewards_files
 
 
 def get_model_files(username):

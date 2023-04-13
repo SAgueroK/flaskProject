@@ -31,7 +31,7 @@ HID1_SIZE = 256
 HID2_SIZE = 256
 SAVE_PATH = "default"
 LOAD_PATH = "NONE"
-
+e_greed = 0.2
 
 class Model(parl.Model):
 
@@ -202,7 +202,7 @@ def run_episode(envs, agent, rpm, episode, action_dim=16, process_num=1):
 
 
 def set_factor(learn_factor, memory_warmup_size, batch_size, learning_rate, gamma, hid1_size, hid2_size, load_path,
-               save_path):
+               save_path, observation):
     global LEARN_FREQ
     LEARN_FREQ = learn_factor
     global MEMORY_WARMUP_SIZE
@@ -221,6 +221,8 @@ def set_factor(learn_factor, memory_warmup_size, batch_size, learning_rate, gamm
     LOAD_PATH = load_path
     global SAVE_PATH
     SAVE_PATH = save_path
+    global e_greed
+    e_greed = observation
     print("train_set is running")
 
 
@@ -229,7 +231,7 @@ def run(functions):
 
     action_dim = 16
     obs_shape = 16 * 13
-    e_greed = 0.2
+
 
     envs = MulEnvs(1)
     rpm = ReplayMemory(MEMORY_SIZE)  # DQN的经验回放池
@@ -281,5 +283,5 @@ def run(functions):
 
 
 if __name__ == '__main__':
-    set_factor(5, 1, 5, 0.001, 0.99)
+    set_factor(5, 1, 5, 0.001, 0.99, 0.2)
     run('relu')
