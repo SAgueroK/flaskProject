@@ -17,8 +17,6 @@ import cv2
 import pygame
 import datetime
 
-from mul_envs import reward_list, action_list
-
 # paddle.enable_static()
 
 LEARN_FREQ = 1  # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
@@ -32,6 +30,7 @@ HID2_SIZE = 256
 SAVE_PATH = "default"
 LOAD_PATH = "NONE"
 e_greed = 0.2
+
 
 class Model(parl.Model):
 
@@ -232,7 +231,6 @@ def run(functions):
     action_dim = 16
     obs_shape = 16 * 13
 
-
     envs = MulEnvs(1)
     rpm = ReplayMemory(MEMORY_SIZE)  # DQN的经验回放池
 
@@ -276,7 +274,6 @@ def run(functions):
             save_path = './weights/dqn_model_episode_{}.ckpt'.format(episode)
             agent.save(save_path)
             print('-[INFO] episode:{}, model saved at {}'.format(episode, save_path))
-    envs.game_exit()
     # 训练结束，保存模型
     print("训练结束，保存模型", SAVE_PATH)
     agent.save(SAVE_PATH)

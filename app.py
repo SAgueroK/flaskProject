@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from xpinyin import Pinyin
@@ -8,8 +8,6 @@ import train_mul
 from concurrent.futures import ThreadPoolExecutor
 import datetime
 import json
-from mul_envs import action_list, reward_list
-
 executor = ThreadPoolExecutor()
 app = Flask(__name__)
 # MySQL所在主机名
@@ -53,12 +51,26 @@ def try_login():  # put application's code here
     if (name != user.name) or (password != user.password):
         return render_template('./login.html')
     else:
-        return render_template('./show.html', model_files=get_model_files(username=name), username=name)
+        return render_template('./index.html', username=name)
 
 
 @app.route('/login')
 def login():  # put application's code here
     return render_template('./login.html')
+
+
+@app.route('/show')
+def show():  # put application's code here
+    username = str(request.args.get("username"))
+    model_files = get_model_files(username)
+    return render_template('./show.html', username=username, model_files=model_files)
+
+
+@app.route('/use')
+def use():  # put application's code here
+    username = str(request.args.get("username"))
+    model_files = get_model_files(username)
+    return render_template('./use.html', username=username, model_files=model_files)
 
 
 @app.route('/line_reward')
@@ -83,9 +95,13 @@ def position_action_time():  # put application's code here
 
 @app.route('/train', methods=["GET"])
 def train():  # put application's code here
+    delete_rewards()
     p = Pinyin()
     username = str(request.args.get("username"))
     save_name = str(request.args.get("save_name"))
+    if save_name == "None":
+        save_name = str(request.args.get("load_name"))
+    print("sdadwadd打完大无大无",save_name)
     save_path = './final/{}.ckpt'.format(username + p.get_pinyin(save_name))
     print(save_name, save_path)
     model_file = db.session.query(Model_file).filter_by(name=save_name).first()
@@ -105,7 +121,7 @@ def train():  # put application's code here
                             gamma=gamma, functions=functions, hid1_size=hid1_size, hid2_size=hid2_size,
                             observation=observation)
     insert_model_file(model_file)
-    executor.submit(run(
+    run(
         learn_factor=learn_factor,
         memory_warmup_size=memory_warmup_size,
         batch_size=batch_size,
@@ -118,14 +134,19 @@ def train():  # put application's code here
         save_name=save_name,
         username=username,
         observation=observation
-    ))
+    )
 
-    return render_template('./chart.html')
+    return redirect(url_for('show', model_file=model_file))
 
 
 @app.route('/register')
 def register():
     return render_template('./register.html')
+
+
+@app.route('/echart')
+def echart():
+    return render_template('./echart.html')
 
 
 @app.route('/try_register')
@@ -156,7 +177,7 @@ def get_rewards():  # put application's code here
 
 @app.route('/demo')
 def demo():  # put application's code here
-    run(5, 200, 32, 0.001, 0.99, "sigmoid", 256, 256, "test", "test", "admit")
+    delete_rewards()
     return render_template('./login.html')
 
 
@@ -213,10 +234,6 @@ class rewards_file(db.Model):
     time = db.Column(db.String(255), nullable=False, primary_key=True)
     rewards = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, time, rewards):
-        self.time = time
-        self.rewards = rewards
-
 
 def get_rewards_file():
     rewards_files = db.session.query(rewards_file).all()
@@ -235,6 +252,18 @@ def insert_model_file(model_file):
 
 def delete_model_file(model_file):
     db.session.delete(model_file)
+    db.session.commit()
+
+
+def delete_rewards():
+    rewards_files = db.session.query(rewards_file).all()
+    for reward in rewards_files:
+        db.session.delete(reward)
+    db.session.commit()
+
+
+def insert_rewards(reward):
+    db.session.add(reward)
     db.session.commit()
 
 
