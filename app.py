@@ -8,6 +8,7 @@ import train_mul
 from concurrent.futures import ThreadPoolExecutor
 import datetime
 import json
+
 executor = ThreadPoolExecutor()
 app = Flask(__name__)
 # MySQL所在主机名
@@ -73,9 +74,66 @@ def use():  # put application's code here
     return render_template('./use.html', username=username, model_files=model_files)
 
 
-@app.route('/line_reward')
+@app.route('/result_chart')
+def result_chart():
+    username = str(request.args.get("username"))
+    model_files = get_model_files(username)
+    return render_template('./result_chart.html', username=username, model_files=model_files)
+
+
+def transit(data):
+    res = []
+    for x in data:
+        res.append(int(x))
+    return res
+
+
+@app.route('/result_compare_chart')
 def line_reward():  # put application's code here
-    return render_template('./line_reward.html')
+    username = str(request.args.get("username"))
+    p = Pinyin()
+    len = 0
+    rewards_file = get_rewards_file()
+    ax = []
+    line = Line()
+    line.set_global_opts(title_opts=opts.TitleOpts(title="对比图"), xaxis_opts=opts.AxisOpts(name="时间轴"), yaxis_opts=
+                         opts.AxisOpts(name="奖励值"))
+    for x in rewards_file:
+        ax.append(x.time)
+        len += 1
+    line.add_xaxis(xaxis_data=ax)
+    if str(request.args.get("load_name_1")) != "0":
+        load_name_1 = username + p.get_pinyin(str(request.args.get("load_name_1")))
+        file1 = open("rewards_data\\" + load_name_1 + ".txt", 'r')
+        content1 = transit(file1.readline().split())
+        file1.close()  # 文件打开，使用完毕后需要关闭
+        line.add_yaxis(series_name=str(request.args.get("load_name_1")), y_axis=content1)
+    if str(request.args.get("load_name_2")) != "0":
+        load_name_2 = username + p.get_pinyin(str(request.args.get("load_name_2")))
+        file2 = open("rewards_data\\" + load_name_2 + ".txt", 'r')
+        content2 = transit(file2.readline().split())
+        file2.close()  # 文件打开，使用完毕后需要关闭
+        line.add_yaxis(series_name=str(request.args.get("load_name_2")), y_axis=content2)
+    if str(request.args.get("load_name_3")) != "0":
+        load_name_3 = username + p.get_pinyin(str(request.args.get("load_name_3")))
+        file3 = open("rewards_data\\" + load_name_3 + ".txt", 'r')
+        content3 = transit(file3.readline().split())
+        file3.close()  # 文件打开，使用完毕后需要关闭
+        line.add_yaxis(series_name=str(request.args.get("load_name_3")), y_axis=content3)
+    if str(request.args.get("load_name_4")) != "0":
+        load_name_4 = username + p.get_pinyin(str(request.args.get("load_name_4")))
+        file4 = open("rewards_data\\" + load_name_4 + ".txt", 'r')
+        content4 = transit(file4.readline().split())
+        file4.close()  # 文件打开，使用完毕后需要关闭
+        line.add_yaxis(series_name=str(request.args.get("load_name_4")), y_axis=content4)
+    if str(request.args.get("load_name_5")) != "0":
+        load_name_5 = username + p.get_pinyin(str(request.args.get("load_name_5")))
+        file5 = open("rewards_data\\" + load_name_5 + ".txt", 'r')
+        content5 = transit(file5.readline().split())
+        file5.close()  # 文件打开，使用完毕后需要关闭
+        line.add_yaxis(series_name=str(request.args.get("load_name_5")), y_axis=content5)
+    line.render("./templates/result_compare_chart.html")
+    return render_template('./result_compare_chart.html')
 
 
 @app.route('/line_score')
@@ -101,9 +159,7 @@ def train():  # put application's code here
     save_name = str(request.args.get("save_name"))
     if save_name == "None":
         save_name = str(request.args.get("load_name"))
-    print("sdadwadd打完大无大无",save_name)
     save_path = './final/{}.ckpt'.format(username + p.get_pinyin(save_name))
-    print(save_name, save_path)
     model_file = db.session.query(Model_file).filter_by(name=save_name).first()
     if model_file is not None:
         delete_model_file(model_file)
@@ -135,7 +191,18 @@ def train():  # put application's code here
         username=username,
         observation=observation
     )
-
+    rewards_file = get_rewards_file()
+    filename = "rewards_data\\" + save_path.split('/')[-1].split('.')[0] + ".txt"
+    file = open(filename, 'w')
+    file.write('')
+    file = open(filename, 'a')
+    index = 0
+    for tmp in rewards_file:
+        index += 1
+        if index != rewards_file.__len__():
+            file.write(tmp.rewards + ' ')
+        else:
+            file.write(tmp.rewards)
     return redirect(url_for('show', model_file=model_file))
 
 

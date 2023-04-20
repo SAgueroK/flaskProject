@@ -166,14 +166,12 @@
         let hid2_size = document.getElementById('hid2_size').value
         let functions = document.getElementById('functions').value
         let load_name = document.getElementById('load_name').value;
-        let save_name = document.getElementById('save_name').value;
         window.open("http://127.0.0.1:5000/echart?learn_factor="+learn_factor
             +"&memory_warmup_size="+memory_warmup_size+"&batch_size="+batch_size+
             "&learning_rate="+learning_rate+"&gamma="+gamma+
             "&observation="+ observation+"&hid1_size="+hid1_size+
             "&hid2_size="+ hid2_size+"&functions="+functions+
-            "&load_name="+ load_name+"&save_name="+save_name
-            ,
+            "&load_name="+ load_name,
             "'target", "");
         return true;
     }

@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>login UI</title>
+    <link rel="stylesheet" href="../static/show.css">
+
+</head>
+<body>
+<div  style="left: 50%;top: 10%;">
+<h2 style="font-size: 30px;
+    margin:20px 0 30px;
+	padding:0;
+	color: silver;
+	text-align:center;
+	}
+	.box .inputBox
+	{
+		position:relative;
+	}">合成大西瓜深度学习网页</h2>
+</div>
+<form action="http://127.0.0.1:5000/result_compare_chart" method="GET"  onsubmit="onclick_botton()">
+
+    <div class="box" style="left: 50%;">
+                <h2>选择要查看的模型</h2>
+        <div class="inputBox" align="center">
+
+          <select id = "load_name_1" name="load_name_1" required="required" style="font-size: 20px" >
+          <option value="0">无</option>
+              {% for mode_file in model_files %}
+                <option value="{{mode_file.name}}">{{mode_file.name}}</option>
+              {% endfor %}
+          </select>
+        </div>
+        <div class="inputBox" align="center">
+
+          <select id = "load_name_2" name="load_name_2" required="required" style="font-size: 20px" >
+          <option value="0">无</option>
+              {% for mode_file in model_files %}
+                <option value="{{mode_file.name}}">{{mode_file.name}}</option>
+              {% endfor %}
+          </select>
+        </div>
+        <div class="inputBox" align="center">
+
+          <select id = "load_name_3" name="load_name_3" required="required" style="font-size: 20px" >
+          <option value="0">无</option>
+              {% for mode_file in model_files %}
+                <option value="{{mode_file.name}}">{{mode_file.name}}</option>
+              {% endfor %}
+          </select>
+        </div>
+        <div class="inputBox" align="center">
+
+          <select id = "load_name_4" name="load_name_4" required="required" style="font-size: 20px" >
+          <option value="0">无</option>
+              {% for mode_file in model_files %}
+                <option value="{{mode_file.name}}">{{mode_file.name}}</option>
+              {% endfor %}
+          </select>
+        </div>
+        <div class="inputBox" align="center">
+
+          <select id = "load_name_5" name="load_name_5" required="required" style="font-size: 20px" >
+          <option value="0">无</option>
+              {% for mode_file in model_files %}
+                <option value="{{mode_file.name}}">{{mode_file.name}}</option>
+              {% endfor %}
+          </select>
+        </div>
+        <div class="inputBox" align="center">
+          <input type="text" name="username" value="{{username}}" style = "display:none">
+            <input   type="submit" name="" value="查看对比图" style="text-align:center;padding:10px 20px;width:200px;">
+        </div>
+    </div>
+</form>
+
+</body>
+    <script type="text/javascript">
+    function onclick_botton(){
+        let learn_factor = document.getElementById('learn_factor').value
+        let memory_warmup_size = document.getElementById('memory_warmup_size').value
+        let batch_size = document.getElementById('batch_size').value
+        let learning_rate = document.getElementById('learning_rate').value
+        let gamma = document.getElementById('gamma').value
+        let observation = document.getElementById('observation').value
+        let hid1_size = document.getElementById('hid1_size').value
+        let hid2_size = document.getElementById('hid2_size').value
+        let functions = document.getElementById('functions').value
+        let load_name = document.getElementById('load_name').value;
+        let save_name = document.getElementById('save_name').value;
+        window.open("http://127.0.0.1:5000/echart?learn_factor="+learn_factor
+            +"&memory_warmup_size="+memory_warmup_size+"&batch_size="+batch_size+
+            "&learning_rate="+learning_rate+"&gamma="+gamma+
+            "&observation="+ observation+"&hid1_size="+hid1_size+
+            "&hid2_size="+ hid2_size+"&functions="+functions+
+            "&load_name="+ load_name+"&save_name="+save_name
+            ,
+            "'target", "");
+        return true;
+    }
+    </script>
+</html>

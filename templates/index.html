@@ -9,21 +9,28 @@
 <body>
     <div class="box" style="left: 50%">
             <h2>合成大西瓜深度学习网页</h2>
-      <div align="center">
+        <div align="center">
           <br>
           <form action="http://127.0.0.1:5000/show">
               <input type="text" name="username" value="{{username}}" style = "display:none">
               <input   type="submit" name="" value="训练模型" >
           </form>
 
-    </div>
-      <div align="center">
-          <br>
-          <form action="http://127.0.0.1:5000/use">
-              <input type="text" name="username" value="{{username}}" style = "display:none">
-              <input   type="submit" name="" value="使用模型" ></a>
-          </form>
-	</div>
+        </div>
+        <div align="center">
+            <br>
+            <form action="http://127.0.0.1:5000/use">
+                <input type="text" name="username" value="{{username}}" style = "display:none">
+                <input   type="submit" name="" value="使用模型" ></a>
+            </form>
+        </div>
+        <div align="center">
+              <br>
+              <form action="http://127.0.0.1:5000/result_chart">
+                  <input type="text" name="username" value="{{username}}" style = "display:none">
+                  <input   type="submit" name="" value="查看对比图" ></a>
+              </form>
+        </div>
     </div>
 
     </body>
