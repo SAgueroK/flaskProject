@@ -1,214 +1,109 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Awesome-pyecharts</title>
-            <script type="text/javascript" src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
+<table cellspacing="0">
+        <thead>
+            <tr>
+                <th>模型</th>
+                <th>训练频率</th>
+                <th>预存经验数据量</th>
+                <th>从经验池取样数量</th>
+                <th>学习率</th>
+                <th>衰减因子</th>
+                <th>激活函数</th>
+                <th>第一层的输出维数</th>
+                <th>第二层的输出维数</th>
+                <th>探索值</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-</head>
-<body >
-    <div id="04dd58b864de48f5b090ac650bcbbabe" class="chart-container" style="width:900px; height:500px; "></div>
     <script>
-        var chart_04dd58b864de48f5b090ac650bcbbabe = echarts.init(
-            document.getElementById('04dd58b864de48f5b090ac650bcbbabe'), 'white', {renderer: 'canvas'});
-        var option_04dd58b864de48f5b090ac650bcbbabe = {
-    "animation": true,
-    "animationThreshold": 2000,
-    "animationDuration": 1000,
-    "animationEasing": "cubicOut",
-    "animationDelay": 0,
-    "animationDurationUpdate": 300,
-    "animationEasingUpdate": "cubicOut",
-    "animationDelayUpdate": 0,
-    "aria": {
-        "enabled": false
-    },
-    "color": [
-        "#5470c6",
-        "#91cc75",
-        "#fac858",
-        "#ee6666",
-        "#73c0de",
-        "#3ba272",
-        "#fc8452",
-        "#9a60b4",
-        "#ea7ccc"
-    ],
-    "series": [
-        {
-            "type": "bar",
-            "name": "actions",
-            "legendHoverLink": true,
-            "data": [
-                0,
-                0,
-                0,
-                0,
-                2,
-                0,
-                0,
-                0,
-                2,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                18,
-                0
-            ],
-            "realtimeSort": false,
-            "showBackground": false,
-            "stackStrategy": "samesign",
-            "cursor": "pointer",
-            "barMinHeight": 0,
-            "barCategoryGap": "20%",
-            "barGap": "30%",
-            "large": false,
-            "largeThreshold": 400,
-            "seriesLayoutBy": "column",
-            "datasetIndex": 0,
-            "clip": true,
-            "zlevel": 0,
-            "z": 2,
-            "label": {
-                "show": true,
-                "margin": 8
+        // 1.先去准备好学生的数据
+        var datas = [
+            {
+                name: 'model_1',
+                learn_factor: 5,
+                memory_warmup_size: 20,
+                batch_size: 8,
+                learning_rate: 0.001,
+                gamma: 0.99,
+                functions: 'sigmoid',
+                hid1_size: 128,
+                hid2_size: 256,
+                observation: 2
+            },
+            {
+                name: 'model_2',
+                learn_factor: 8,
+                memory_warmup_size: 30,
+                batch_size: 6,
+                learning_rate: 0.002,
+                gamma: 0.9,
+                functions: 'sigmoid',
+                hid1_size: 128,
+                hid2_size: 256,
+                observation: 5
+            },
+            {
+                name: 'model_3',
+                learn_factor: 13,
+                memory_warmup_size: 30,
+                batch_size: 12,
+                learning_rate: 0.001,
+                gamma: 0.99,
+                functions: 'relu',
+                hid1_size: 256,
+                hid2_size: 128,
+                observation: 2
+            },
+            {
+                name: 'model_4',
+                learn_factor: 16,
+                memory_warmup_size: 40,
+                batch_size: 11,
+                learning_rate: 0.005,
+                gamma: 0.95,
+                functions: 'relu',
+                hid1_size: 128,
+                hid2_size: 128,
+                observation: 10
+            },
+            {
+                name: 'model_5',
+                learn_factor: 20,
+                memory_warmup_size: 20,
+                batch_size: 10,
+                learning_rate: 0.001,
+                gamma: 0.91,
+                functions: 'relu',
+                hid1_size: 128,
+                hid2_size: 256,
+                observation: 10
+            }
+        ];
+
+        // 2.往tbody 里面创建行：有几个人（通过数组的长度） 我们就创建几行
+        var tbody = document.querySelector('tbody');
+        for (var i = 0; i < 2; i++) {
+            // 1.创建行
+            var tr = document.createElement('tr');
+            tbody.appendChild(tr);
+            // 2.行里面创建单元格(跟数据有关系的3个单元格) td 单元格的数量取决于每个对象里面的属性个数 for循环遍历对象
+            for (var k in datas[i]) {  // 里面的for循环管列 td
+                // 创建单元格
+                var td = document.createElement('td');
+                // 把对象里面的属性值 datas[i][k] 给 td
+                // console.log(datas[i][k]);
+                td.innerHTML = datas[i][k];
+                tr.appendChild(td);
             }
         }
-    ],
-    "legend": [
-        {
-            "data": [
-                "actions"
-            ],
-            "selected": {
-                "actions": true
-            },
-            "show": true,
-            "padding": 5,
-            "itemGap": 10,
-            "itemWidth": 25,
-            "itemHeight": 14,
-            "backgroundColor": "transparent",
-            "borderColor": "#ccc",
-            "borderWidth": 1,
-            "borderRadius": 0,
-            "pageButtonItemGap": 5,
-            "pageButtonPosition": "end",
-            "pageFormatter": "{current}/{total}",
-            "pageIconColor": "#2f4554",
-            "pageIconInactiveColor": "#aaa",
-            "pageIconSize": 15,
-            "animationDurationUpdate": 800,
-            "selector": false,
-            "selectorPosition": "auto",
-            "selectorItemGap": 7,
-            "selectorButtonGap": 10
-        }
-    ],
-    "tooltip": {
-        "show": true,
-        "trigger": "item",
-        "triggerOn": "mousemove|click",
-        "axisPointer": {
-            "type": "line"
-        },
-        "showContent": true,
-        "alwaysShowContent": false,
-        "showDelay": 0,
-        "hideDelay": 100,
-        "enterable": false,
-        "confine": false,
-        "appendToBody": false,
-        "transitionDuration": 0.4,
-        "textStyle": {
-            "fontSize": 14
-        },
-        "borderWidth": 0,
-        "padding": 5,
-        "order": "seriesAsc"
-    },
-    "xAxis": [
-        {
-            "show": true,
-            "scale": false,
-            "nameLocation": "end",
-            "nameGap": 15,
-            "gridIndex": 0,
-            "inverse": false,
-            "offset": 0,
-            "splitNumber": 5,
-            "minInterval": 0,
-            "splitLine": {
-                "show": true,
-                "lineStyle": {
-                    "show": true,
-                    "width": 1,
-                    "opacity": 1,
-                    "curveness": 0,
-                    "type": "solid"
-                }
-            },
-            "data": [
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14,
-                15,
-                16
-            ]
-        }
-    ],
-    "yAxis": [
-        {
-            "show": true,
-            "scale": false,
-            "nameLocation": "end",
-            "nameGap": 15,
-            "gridIndex": 0,
-            "inverse": false,
-            "offset": 0,
-            "splitNumber": 5,
-            "minInterval": 0,
-            "splitLine": {
-                "show": true,
-                "lineStyle": {
-                    "show": true,
-                    "width": 1,
-                    "opacity": 1,
-                    "curveness": 0,
-                    "type": "solid"
-                }
+
+        // 4.删除操作 开始
+        var as = document.querySelectorAll('a');
+        for (var i = 0; i < as.length; i++) {
+            as[i].onclick = function () {
+                // 点击 a 删除当前a所在的行 node.removeChild(child)
+                tbody.removeChild(this.parentNode.parentNode);
             }
         }
-    ],
-    "title": [
-        {
-            "show": true,
-            "text": "\u67f1\u72b6\u56fe-actions",
-            "target": "blank",
-            "subtarget": "blank",
-            "padding": 5,
-            "itemGap": 10,
-            "textAlign": "auto",
-            "textVerticalAlign": "auto",
-            "triggerEvent": false
-        }
-    ]
-};
-        chart_04dd58b864de48f5b090ac650bcbbabe.setOption(option_04dd58b864de48f5b090ac650bcbbabe);
     </script>
-</body>
-</html>

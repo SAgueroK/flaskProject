@@ -261,7 +261,7 @@ def run(functions):
     #     run_episode(envs, agent, rpm, episode=-1)
     #     print("wam up", len(rpm), MEMORY_WARMUP_SIZE)
 
-    max_episode = 2
+    max_episode = 10
 
     # 开始训练
     print('-[INFO] Start training.')

@@ -1,3 +1,4 @@
+import numpy as np
 from flask import Flask, render_template, request, redirect, url_for
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -31,6 +32,8 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}" \
                                         f"?charset=utf8"
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = datetime.timedelta(seconds=1)
+
 db = SQLAlchemy(app)
 
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -94,46 +97,84 @@ def line_reward():  # put application's code here
     p = Pinyin()
     len = 0
     rewards_file = get_rewards_file()
-    ax = []
+    content = []
     line = Line()
+    modelfiles = [Model_file() for _ in range(5)]
+    size = 0
     line.set_global_opts(title_opts=opts.TitleOpts(title="对比图"), xaxis_opts=opts.AxisOpts(name="时间轴"), yaxis_opts=
-                         opts.AxisOpts(name="奖励值"))
+    opts.AxisOpts(name="奖励值"), legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(font_size=30)))
+    line.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+    ax = []
     for x in rewards_file:
-        ax.append(x.time)
+        ax.append(len)
         len += 1
-    line.add_xaxis(xaxis_data=ax)
+    tmp = []
     if str(request.args.get("load_name_1")) != "0":
-        load_name_1 = username + p.get_pinyin(str(request.args.get("load_name_1")))
+        name = p.get_pinyin(str(request.args.get("load_name_1")))
+        load_name_1 = username + name
         file1 = open("rewards_data\\" + load_name_1 + ".txt", 'r')
         content1 = transit(file1.readline().split())
+        for i in range(len):
+            tmp.append([ax[i], content1[i]])
+        content.append(tmp)
         file1.close()  # 文件打开，使用完毕后需要关闭
-        line.add_yaxis(series_name=str(request.args.get("load_name_1")), y_axis=content1)
+        modelfiles[size] = get_model_file(name)
+        size += 1
     if str(request.args.get("load_name_2")) != "0":
-        load_name_2 = username + p.get_pinyin(str(request.args.get("load_name_2")))
+        name = p.get_pinyin(str(request.args.get("load_name_2")))
+        load_name_2 = username + name
         file2 = open("rewards_data\\" + load_name_2 + ".txt", 'r')
         content2 = transit(file2.readline().split())
+        tmp = []
+        for i in range(len):
+            tmp.append([ax[i], content2[i]])
+        content.append(tmp)
         file2.close()  # 文件打开，使用完毕后需要关闭
-        line.add_yaxis(series_name=str(request.args.get("load_name_2")), y_axis=content2)
+        modelfiles[size] = get_model_file(name)
+        size += 1
     if str(request.args.get("load_name_3")) != "0":
-        load_name_3 = username + p.get_pinyin(str(request.args.get("load_name_3")))
+        name = p.get_pinyin(str(request.args.get("load_name_3")))
+        load_name_3 = username + name
         file3 = open("rewards_data\\" + load_name_3 + ".txt", 'r')
         content3 = transit(file3.readline().split())
+        tmp = []
+        for i in range(len):
+            tmp.append([ax[i], content3[i]])
+        content.append(tmp)
         file3.close()  # 文件打开，使用完毕后需要关闭
-        line.add_yaxis(series_name=str(request.args.get("load_name_3")), y_axis=content3)
+        modelfiles[size] = get_model_file(name)
+        size += 1
     if str(request.args.get("load_name_4")) != "0":
-        load_name_4 = username + p.get_pinyin(str(request.args.get("load_name_4")))
+        name = p.get_pinyin(str(request.args.get("load_name_4")))
+        load_name_4 = username + name
         file4 = open("rewards_data\\" + load_name_4 + ".txt", 'r')
         content4 = transit(file4.readline().split())
+        tmp = []
+        for i in range(len):
+            tmp.append([ax[i], content4[i]])
+        content.append(tmp)
         file4.close()  # 文件打开，使用完毕后需要关闭
-        line.add_yaxis(series_name=str(request.args.get("load_name_4")), y_axis=content4)
+        modelfiles[size] = get_model_file(name)
+        size += 1
     if str(request.args.get("load_name_5")) != "0":
-        load_name_5 = username + p.get_pinyin(str(request.args.get("load_name_5")))
+        name = p.get_pinyin(str(request.args.get("load_name_5")))
+        load_name_5 = username + name
         file5 = open("rewards_data\\" + load_name_5 + ".txt", 'r')
         content5 = transit(file5.readline().split())
+        tmp = []
+        for i in range(len):
+            tmp.append([ax[i], content5[i]])
+        content.append(tmp)
         file5.close()  # 文件打开，使用完毕后需要关闭
-        line.add_yaxis(series_name=str(request.args.get("load_name_5")), y_axis=content5)
-    line.render("./templates/result_compare_chart.html")
-    return render_template('./result_compare_chart.html')
+        modelfiles[size] = get_model_file(name)
+        size += 1
+    supple = size
+    while supple < 5:
+        tmp = []
+        supple += 1
+        content.append(tmp)
+    print(content[3])
+    return render_template('./result_compare_chart.html', modelfiles=modelfiles, size=size, content=content)
 
 
 @app.route('/line_score')
@@ -312,6 +353,11 @@ def get_model_files(username):
     return model_files
 
 
+def get_model_file(name):
+    model_files = db.session.query(Model_file).filter_by(name=name).first()
+    return model_files
+
+
 def insert_model_file(model_file):
     db.session.add(model_file)
     db.session.commit()
@@ -338,4 +384,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=8090)

@@ -20,139 +20,29 @@
 	}">合成大西瓜深度学习网页</h2>
 </div>
 <form action="http://127.0.0.1:5000/train" method="GET"  onsubmit="onclick_botton()">
-    <div class="box" style="left: 20%;">
-            <h2>强化学习参数</h2>
-
-    <div class="inputBox">
-      <input id = "learn_factor" type="text" name="learn_factor" value="5" required="required" style="font-size: 20px">
-      <label>训练频率</label>
-    </div>
-    <div class="inputBox">
-		<input id = "memory_warmup_size" type="text" name="memory_warmup_size"  value="20" required="required" style="font-size: 20px">
-		<label>预存经验数据量</label>
-    </div>
-      <div class="inputBox">
-      <input id = "batch_size" type="text" name="batch_size" value="8" required="required" style="font-size: 20px">
-      <label>从经验池取样数量</label>
-    </div>
-      <div class="inputBox">
-      <input id = "learning_rate" type="text" name="learning_rate" value="0.001" required="required" style="font-size: 20px">
-      <label>学习率</label>
-    </div>
-      <div class="inputBox">
-      <input id = "gamma" type="text" name="gamma" value="0.99" required="required" style="font-size: 20px">
-      <label>衰减因子</label>
-    </div>
-        <div class="inputBox">
-      <input id = "observation" type="text" name="observation" value="0.2" required="required" style="font-size: 20px">
-      <label>探索值</label>
-    </div>
-    </div>
-
-
-	</div>
 
 <div class="box" style="left: 50%;">
-            <h2>神经网络参数</h2>
-      <div class="inputBox">
-      <input id = "hid1_size" type="text" name="hid1_size" value="256" required="required" style="font-size: 20px">
-      <label>第一层的输出维数</label>
+            <h2>选择模型</h2>
 
-    </div>
-      <div class="inputBox">
-      <input id = "hid2_size" type="text" name="hid2_size" value="256" required="required" style="font-size: 20px">
-      <label>第二层的输出维数</label>
-    </div>
-      <label style="color: deepskyblue">激活函数</label> &nbsp; &nbsp; &nbsp; &nbsp;
-       &nbsp; &nbsp; &nbsp;<label style="color: deepskyblue">加载已保存的模型</label>
-
-      <div class="inputBox">
-
-      <select id = "functions" name="functions" required="required" style="font-size: 20px" >
-        <option value="sigmoid" >sigmoid</option>
-        <option value="relu">relu</option>
-        <option value="elu">elu</option>
-        <option value="hard_shrink">hard_shrink</option>
-        <option value="exp">exp</option>
-
-    </select>
-
-      <select id = "load_name" name="load_name" required="required" style="font-size: 20px" >
-      <option value="0">无</option>
+    <div  align="center">
+      <select id = "load_name" name="load_name" required="required" style="font-size: 20px;width:200px" >
+      <option value="0" >无</option>
           {% for mode_file in model_files %}
             <option value="{{mode_file.name}}">{{mode_file.name}}</option>
           {% endfor %}
       </select>
-      <div class="inputBox">
+    </div>
+      <div class="inputBox " align="center">
       <input type="text" name="username" value="{{username}}" style = "display:none">
-
+<br>
+    <input   type="submit" name="" value="开始模型应用" class="input" style="text-align:center;padding:10px 20px;width:200px;">
     </div>
     </div>
 
 
 	</div>
 
-      <div class="inputBox" style="position: absolute;
-                                    bottom: 0;
-                                    left: 50%;
-                                    transform: translate(-50%, -50%);">
-          <br>
-    <input   type="submit" name="" value="开始深度学习" class="input" style="text-align:center;padding:10px 20px;width:200px;">
-
-    </div>
 </form>
-<div class="box" style="left: 80%;" >
-            <h2>游戏水果奖励参数</h2>
-      <div class="inputBox">
-      <input type="text" name="hid1_size" value="2" required="required" style="font-size: 20px">
-      <label>葡萄</label>
-          </div>
-          <div class="inputBox">
-      <input type="text" name="hid1_size" value="4" required="required" style="font-size: 20px">
-      <label>樱桃</label>
-
-    </div>
-<div class="inputBox">
-      <input type="text" name="hid1_size" value="8" required="required" style="font-size: 20px">
-      <label>橘子</label>
-
-    </div>
-    <div class="inputBox">
-      <input type="text" name="hid1_size" value="10" required="required" style="font-size: 20px">
-      <label>柠檬</label>
-
-    </div>
-    <div class="inputBox">
-      <input type="text" name="hid1_size" value="15" required="required" style="font-size: 20px">
-      <label>猕猴桃</label>
-
-    </div>
-    <div class="inputBox">
-      <input type="text" name="hid1_size" value="20" required="required" style="font-size: 20px">
-      <label>西红柿</label>
-
-    </div>
-    <div class="inputBox">
-      <input type="text" name="hid1_size" value="36" required="required" style="font-size: 20px">
-      <label>杏子</label>
-
-    </div>
-    <div class="inputBox">
-      <input type="text" name="hid1_size" value="40" required="required" style="font-size: 20px">
-      <label>菠萝</label>
-
-    </div>
-    <div class="inputBox">
-      <input type="text" name="hid1_size" value="50" required="required" style="font-size: 20px">
-      <label>椰子</label>
-
-    </div>
-    <div class="inputBox">
-      <input type="text" name="hid1_size" value="100" required="required" style="font-size: 20px">
-      <label>西瓜</label>
-
-    </div>
-    </div>
     </body>
     <script type="text/javascript">
     function onclick_botton(){
